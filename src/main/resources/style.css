@@ -1,0 +1,368 @@
+/* --- ESTILOS GENERALES --- */
+.pantallaLogin {
+    -fx-background-image: url(images/imagenLogin.jpg);
+    -fx-background-size: cover;
+    -fx-background-position: center;
+}
+.pantallaLogin Text {
+    -fx-fill: white;
+}
+.pantallaLogin Label {
+    -fx-text-fill: #007bff;
+    -fx-font-weight: bold;
+}
+
+/* --- ESTILOS PANTALLACREARPELICULA --- */
+.PantallacrearPelicula {
+    -fx-background-image: url(images/imagenFondo.jpg);
+}
+
+.PantallacrearPelicula .menu-bar {
+    -fx-background-color: #333333;
+}
+
+.PantallacrearPelicula .menu-bar .menu {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.PantallacrearPelicula .menu-bar .label {
+    -fx-text-fill: white;
+}
+
+
+.context-menu {
+    -fx-background-color: #333333;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-padding: 0;
+}
+
+
+.PantallacrearPelicula .menu-item {
+    -fx-background-color: #333333;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.PantallacrearPelicula .menu-item .label {
+    -fx-text-fill: white;
+}
+
+.PantallacrearPelicula .menu-item:hover {
+    -fx-background-color: #555555;
+}
+
+
+.PantallacrearPelicula Text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+
+.PantallacrearPelicula TableView {
+    -fx-background-color: #000000;
+    -fx-border-color: #555555;
+    -fx-border-width: 1px;
+}
+
+.PantallacrearPelicula .table-row-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+.PantallacrearPelicula .table-row-cell:selected {
+    -fx-background-color: #333333;
+}
+.PantallacrearPelicula .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.PantallacrearPelicula .table-cell {
+    -fx-text-fill: white;
+    -fx-border-color: #333333;
+}
+
+.PantallacrearPelicula .column-header-background {
+    -fx-background-color: #555555;
+}
+
+.PantallacrearPelicula .column-header {
+    -fx-background-color: transparent;
+}
+
+.PantallacrearPelicula .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.PantallacrearPelicula .table-view .filler {
+    -fx-background-color: #555555;
+}
+
+.PantallacrearPelicula TextField,
+.PantallacrearPelicula Spinner {
+    -fx-background-color: #000000;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3px;
+    -fx-text-fill: white;
+}
+
+.PantallacrearPelicula .spinner .text-field {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+
+.PantallacrearPelicula .spinner .increment-arrow-button,
+.PantallacrearPelicula .spinner .decrement-arrow-button {
+    -fx-background-color: #333333;
+    -fx-border-color: #cccccc;
+}
+
+.PantallacrearPelicula .spinner .increment-arrow,
+.PantallacrearPelicula .spinner .decrement-arrow {
+    -fx-background-color: white;
+}
+/* ------------------------------------------------------------- */
+
+.PantallacrearPelicula Label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.PantallacrearPelicula Button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3px;
+    -fx-cursor: hand;
+}
+
+.PantallacrearPelicula Button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.AnadirCopiaController {
+    -fx-background-image: url(images/imagenFondo.jpg);
+}
+
+.AnadirCopiaController Label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.AnadirCopiaController TableView {
+    -fx-background-color: #000000;
+    -fx-border-color: #555555;
+    -fx-border-width: 1px;
+}
+
+.AnadirCopiaController .table-row-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+
+.AnadirCopiaController .table-row-cell:selected {
+    -fx-background-color: #333333;
+}
+.AnadirCopiaController .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.AnadirCopiaController .table-cell {
+    -fx-text-fill: white;
+    -fx-border-color: #333333;
+}
+
+.AnadirCopiaController .column-header-background {
+    -fx-background-color: #555555;
+}
+
+.AnadirCopiaController .column-header {
+    -fx-background-color: transparent;
+}
+
+.AnadirCopiaController .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.AnadirCopiaController .table-view .filler {
+    -fx-background-color: #555555;
+}
+
+.AnadirCopiaController TextField,
+.AnadirCopiaController ComboBox {
+    -fx-background-color: #333333;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3px;
+    -fx-text-fill: white;
+}
+
+
+.AnadirCopiaController .list-cell {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+}
+
+.AnadirCopiaController .list-cell:selected {
+    -fx-background-color: #555555;
+    -fx-text-fill: white;
+}
+
+
+
+.AnadirCopiaController Button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3px;
+    -fx-cursor: hand;
+}
+
+.AnadirCopiaController Button:hover {
+    -fx-background-color: #0056b3;
+}
+
+/* --- ESTILOS PANTALLAMAIN --- */
+.PantallaMain {
+    -fx-background-image: url(images/imagenFondo.jpg);
+}
+
+.PantallaMain Label,
+.PantallaMain Text {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.PantallaMain TableView {
+    -fx-background-color: #000000;
+    -fx-border-color: #555555;
+    -fx-border-width: 1px;
+}
+
+.PantallaMain .table-row-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+/* ESTILO DE FILA SELECCIONADA (Oscuro) */
+.PantallaMain .table-row-cell:selected {
+    -fx-background-color: #333333;
+}
+.PantallaMain .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+.PantallaMain .table-cell {
+    -fx-text-fill: white;
+    -fx-border-color: #333333;
+}
+
+.PantallaMain .column-header-background {
+    -fx-background-color: #555555;
+}
+
+.PantallaMain .column-header {
+    -fx-background-color: transparent;
+}
+
+.PantallaMain .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.PantallaMain .table-view .filler {
+    -fx-background-color: #555555;
+}
+
+.PantallaMain TextField,
+.PantallaMain ComboBox {
+    -fx-background-color: #333333;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 3px;
+    -fx-text-fill: white;
+}
+
+.PantallaMain .list-cell {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+}
+
+.PantallaMain .list-cell:selected {
+    -fx-background-color: #555555;
+    -fx-text-fill: white;
+}
+
+.PantallaMain Button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3px;
+    -fx-cursor: hand;
+}
+
+.PantallaMain Button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.PantallaMain .menu-bar {
+    -fx-background-color: #333333;
+}
+
+.PantallaMain .menu-bar .menu {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.PantallaMain .menu-bar .label {
+    -fx-text-fill: white;
+}
+
+/* AJUSTES MENÚ DESPLEGABLE (PANTALLAMAIN) */
+.PantallaMain .menu-item {
+    -fx-background-color: #333333;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.PantallaMain .menu-item:hover {
+    -fx-background-color: #555555;
+}
+
+/* --- ESTILOS PANTALLADETALLE --- */
+.pantallaDetalle {
+    -fx-background-image: url(images/imagenFondo.jpg);
+}
+
+.pantallaDetalle Text {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+}
+
+.pantallaDetalle Text#lblId,
+.pantallaDetalle Text#lblPelicula,
+.pantallaDetalle Text#lblUsuario,
+.pantallaDetalle Text#lblEstado,
+.pantallaDetalle Text#lblSoporte {
+    -fx-fill: #eeeeee;
+    -fx-font-weight: normal;
+}
+
+.pantallaDetalle Button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 3px;
+    -fx-cursor: hand;
+}
+
+.pantallaDetalle Button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.pantallaDetalle VBox {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+}
