@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import org.example.retofrancisco2.peliculas.Pelicula;
 import org.example.retofrancisco2.peliculas.PeliculaRepository;
-import org.example.retofrancisco2.services.AuthService;
 import org.example.retofrancisco2.services.SessionService;
 import org.example.retofrancisco2.utils.DataProvider;
 import org.example.retofrancisco2.utils.JavaFXUtil;
@@ -18,88 +17,143 @@ import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
+/**
+ * Controlador encargado de gestionar la vista para añadir nuevas películas al sistema.
+ * Permite al administrador introducir los datos de una película a través de un formulario
+ * y mostrarlas en una tabla tras ser guardadas en la base de datos.
+ */
 public class AnadirPeliculasController implements Initializable {
+
+    /** Columna que muestra el año de la película. */
     @javafx.fxml.FXML
     private TableColumn<Pelicula,String> tcAno;
+
+    /** Elemento del menú para cerrar sesión. */
     @javafx.fxml.FXML
     private MenuItem miCerrarSesion;
+
+    /** Campo de texto que contiene la descripción de la película. */
     @javafx.fxml.FXML
     private TextField tfDescripcion;
+
+    /** Elemento del menú para cerrar la aplicación. */
     @javafx.fxml.FXML
     private MenuItem miCerrar;
+
+    /** Campo de texto que contiene el género de la película. */
     @javafx.fxml.FXML
     private TextField tfGenero;
+
+    /** Spinner para seleccionar el año de la película. */
     @javafx.fxml.FXML
     private Spinner spnAno;
+
+    /** Columna que muestra el título de la película. */
     @javafx.fxml.FXML
     private TableColumn<Pelicula,String> tcTitulo;
+
+    /** Campo de texto que contiene el director de la película. */
     @javafx.fxml.FXML
     private TextField tfDirector;
+
+    /** Campo de texto que contiene el título de la película. */
     @javafx.fxml.FXML
     private TextField tfTitulo;
+
+    /** Columna que muestra la descripción de la película. */
     @javafx.fxml.FXML
     private TableColumn<Pelicula,String> tcDescripcion;
+
+    /** Columna que muestra el director de la película. */
     @javafx.fxml.FXML
     private TableColumn<Pelicula,String> tcDirector;
+
+    /** Tabla donde se muestran todas las películas registradas. */
     @javafx.fxml.FXML
     private TableView<Pelicula> tabla;
+
+    /** Botón para añadir una nueva película. */
     @javafx.fxml.FXML
     private Button btnAnadir;
+
+    /** Columna que muestra el ID de la película. */
     @javafx.fxml.FXML
     private TableColumn<Pelicula,String> tcId;
+
+    /** Columna que muestra el género de la película. */
     @javafx.fxml.FXML
     private TableColumn<Pelicula,String> tcGenero;
-   PeliculaRepository peliculaRepository;
 
+    /** Repositorio encargado de gestionar operaciones de persistencia con películas. */
+    private PeliculaRepository peliculaRepository;
+
+    /**
+     * Inicializa la interfaz configurando las columnas de la tabla,
+     * el spinner de año y cargando las películas existentes desde la base de datos.
+     *
+     * @param url ubicación utilizada para resolver rutas relativas del archivo FXML.
+     * @param resourceBundle recursos adicionales para la internacionalización.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        peliculaRepository=new PeliculaRepository(DataProvider.getSessionFactory());
-        tcId.setCellValueFactory(row->{
-            return new SimpleStringProperty(row.getValue().getId().toString());
-        });
-        tcTitulo.setCellValueFactory(row->{
-            return new SimpleStringProperty(row.getValue().getTitulo());
-        });
-        tcGenero.setCellValueFactory(row->{
-            return new SimpleStringProperty(row.getValue().getGenero());
-        });
-        tcAno.setCellValueFactory(row->{
-            return new SimpleStringProperty(row.getValue().getAño().toString());
-        });
-        tcDescripcion.setCellValueFactory(row->{
-            return new SimpleStringProperty(row.getValue().getDescripcion());
-        });
-        tcDirector.setCellValueFactory(row->{
-            return new SimpleStringProperty(row.getValue().getDirector());
-        });
-        spnAno.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1970, 2025, 2023));
-        ObservableList<Pelicula> observableList=observableArrayList(peliculaRepository.findAll());
-        tabla.setItems(observableList);
+        peliculaRepository = new PeliculaRepository(DataProvider.getSessionFactory());
 
+        tcId.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getId().toString()));
+        tcTitulo.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getTitulo()));
+        tcGenero.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getGenero()));
+        tcAno.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getAño().toString()));
+        tcDescripcion.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getDescripcion()));
+        tcDirector.setCellValueFactory(row -> new SimpleStringProperty(row.getValue().getDirector()));
+
+        spnAno.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1970, 2025, 2023));
+
+        ObservableList<Pelicula> observableList = observableArrayList(peliculaRepository.findAll());
+        tabla.setItems(observableList);
     }
 
+    /**
+     * Cierra la sesión actual del usuario y redirige a la vista de inicio de sesión.
+     *
+     * @param actionEvent evento generado al seleccionar la opción en el menú.
+     */
     @javafx.fxml.FXML
     public void cerrarSesion(ActionEvent actionEvent) {
         SessionService.logout();
         JavaFXUtil.setScene("/org/example/retofrancisco2/login-view.fxml");
     }
 
+    /**
+     * Añade una nueva película a la base de datos utilizando los valores
+     * ingresados en el formulario. Si algún campo está vacío, muestra una advertencia.
+     *
+     * @param actionEvent evento generado al pulsar el botón para añadir película.
+     */
     @javafx.fxml.FXML
     public void añadirPelicula(ActionEvent actionEvent) {
-        Pelicula pelicula=new Pelicula();
-        if (tfTitulo.getText().isEmpty() || tfGenero.getText().isEmpty() || tfDescripcion.getText().isEmpty() || tfDirector.getText().isEmpty()){
+        Pelicula pelicula = new Pelicula();
+
+        if (tfTitulo.getText().isEmpty() || tfGenero.getText().isEmpty()
+                || tfDescripcion.getText().isEmpty() || tfDirector.getText().isEmpty()) {
+
             JavaFXUtil.showModal(Alert.AlertType.WARNING, "Atención", null, "Debe rellenar todos los campos");
-        }else{
+
+        } else {
             pelicula.setTitulo(tfTitulo.getText());
             pelicula.setGenero(tfGenero.getText());
             pelicula.setAño((Integer) spnAno.getValue());
             pelicula.setDescripcion(tfDescripcion.getText());
             pelicula.setDirector(tfDirector.getText());
+
             peliculaRepository.save(pelicula);
             tabla.getItems().add(pelicula);
         }
     }
 
+    /**
+     * Cierra la aplicación por completo.
+     *
+     * @param actionEvent evento generado al seleccionar la opción de cerrar.
+     */
     @javafx.fxml.FXML
     public void cerrar(ActionEvent actionEvent) {
         System.exit(0);

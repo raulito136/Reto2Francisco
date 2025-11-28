@@ -8,18 +8,28 @@ import org.example.retofrancisco2.copias.Copia;
 
 import java.util.List;
 
+/**
+
+ * Entidad que representa un usuario del sistema.
+ * Contiene información básica del usuario y su relación con copias.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="usuarios")
+@Table(name = "usuarios")
 @Entity
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String nombre_usuario;
+
     private String contraseña;
+
     private boolean administrador;
+
     @OneToMany(mappedBy = "usuario")
     private List<Copia> copias;
 }
