@@ -135,22 +135,31 @@ public class AnadirPeliculasController implements Initializable {
      */
     @javafx.fxml.FXML
     public void añadirPelicula(ActionEvent actionEvent) {
-        Pelicula pelicula = new Pelicula();
+        String titulo = tfTitulo.getText().trim();
+        String genero = tfGenero.getText().trim();
+        String descripcion = tfDescripcion.getText().trim();
+        String director = tfDirector.getText().trim();
 
-        if (tfTitulo.getText().isEmpty() || tfGenero.getText().isEmpty()
-                || tfDescripcion.getText().isEmpty() || tfDirector.getText().isEmpty()) {
+        if (titulo.isEmpty() || genero.isEmpty() || descripcion.isEmpty() || director.isEmpty()) {
 
-            JavaFXUtil.showModal(Alert.AlertType.WARNING, "Atención", null, "Debe rellenar todos los campos");
+            JavaFXUtil.showModal(Alert.AlertType.WARNING, "Atención", null, "Debe rellenar todos los campos y no pueden contener solo espacios.");
 
         } else {
-            pelicula.setTitulo(tfTitulo.getText());
-            pelicula.setGenero(tfGenero.getText());
+            Pelicula pelicula = new Pelicula();
+
+            pelicula.setTitulo(titulo);
+            pelicula.setGenero(genero);
             pelicula.setAño((Integer) spnAno.getValue());
-            pelicula.setDescripcion(tfDescripcion.getText());
-            pelicula.setDirector(tfDirector.getText());
+            pelicula.setDescripcion(descripcion);
+            pelicula.setDirector(director);
 
             peliculaRepository.save(pelicula);
             tabla.getItems().add(pelicula);
+
+            tfTitulo.clear();
+            tfGenero.clear();
+            tfDescripcion.clear();
+            tfDirector.clear();
         }
     }
 
