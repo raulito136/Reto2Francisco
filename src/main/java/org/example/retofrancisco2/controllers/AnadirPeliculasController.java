@@ -107,6 +107,11 @@ public class AnadirPeliculasController implements Initializable {
 
         spnAno.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1970, 2025, 2023));
 
+        limitarLongitud(tfTitulo, 255);
+        limitarLongitud(tfGenero, 255);
+        limitarLongitud(tfDirector, 255);
+        limitarLongitud(tfDescripcion, 255);
+
         ObservableList<Pelicula> observableList = observableArrayList(peliculaRepository.findAll());
         tabla.setItems(observableList);
     }
@@ -157,5 +162,14 @@ public class AnadirPeliculasController implements Initializable {
     @javafx.fxml.FXML
     public void cerrar(ActionEvent actionEvent) {
         System.exit(0);
+    }
+
+    private void limitarLongitud(TextField tf, int maxLength) {
+        tf.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() > maxLength) {
+                return null; // Rechaza el cambio si se pasa de 255
+            }
+            return change; // Acepta el cambio
+        }));
     }
 }
