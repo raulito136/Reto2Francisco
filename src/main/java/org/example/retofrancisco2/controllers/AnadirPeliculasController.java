@@ -14,6 +14,7 @@ import org.example.retofrancisco2.utils.JavaFXUtil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -143,24 +144,32 @@ public class AnadirPeliculasController implements Initializable {
         if (titulo.isEmpty() || genero.isEmpty() || descripcion.isEmpty() || director.isEmpty()) {
 
             JavaFXUtil.showModal(Alert.AlertType.WARNING, "Atención", null, "Debe rellenar todos los campos y no pueden contener solo espacios.");
+            return;
 
-        } else {
-            Pelicula pelicula = new Pelicula();
-
-            pelicula.setTitulo(titulo);
-            pelicula.setGenero(genero);
-            pelicula.setAño((Integer) spnAno.getValue());
-            pelicula.setDescripcion(descripcion);
-            pelicula.setDirector(director);
-
-            peliculaRepository.save(pelicula);
-            tabla.getItems().add(pelicula);
-
-            tfTitulo.clear();
-            tfGenero.clear();
-            tfDescripcion.clear();
-            tfDirector.clear();
         }
+
+        if (esSoloNumero(genero) || esSoloNumero(descripcion) || esSoloNumero(director)) {
+
+            JavaFXUtil.showModal(Alert.AlertType.WARNING, "Atención", null, "Los campos Género, Descripción y Director no pueden contener únicamente un valor numérico.");
+            return;
+        }
+
+        Pelicula pelicula = new Pelicula();
+
+        pelicula.setTitulo(titulo);
+        pelicula.setGenero(genero);
+        pelicula.setAño((Integer) spnAno.getValue());
+        pelicula.setDescripcion(descripcion);
+        pelicula.setDirector(director);
+
+        peliculaRepository.save(pelicula);
+        tabla.getItems().add(pelicula);
+
+        // Limpieza de campos
+        tfTitulo.clear();
+        tfGenero.clear();
+        tfDescripcion.clear();
+        tfDirector.clear();
     }
 
     /**
@@ -173,6 +182,13 @@ public class AnadirPeliculasController implements Initializable {
         System.exit(0);
     }
 
+    /**
+     *Metodo para liminar el numero de caracteres, pricipalmente para que no sobrepase los permitidos por la BD
+     *
+     * @param tf El textfield al que se le aplicará la limitación de longitud.
+     * @param maxLength La longitud máxima de caracteres permitida en el campo de texto.
+     */
+
     private void limitarLongitud(TextField tf, int maxLength) {
         tf.setTextFormatter(new TextFormatter<>(change -> {
             if (change.getControlNewText().length() > maxLength) {
@@ -180,5 +196,15 @@ public class AnadirPeliculasController implements Initializable {
             }
             return change; // Acepta el cambio
         }));
+    }
+
+    /**
+     * Verifica si la cadena de entrada contiene solo caracteres numéricos enteros.
+     *
+     * @param str La cadena a validar (ya debe estar limpia de espacios con trim()).
+     * @return true si la cadena es un número entero (ej: "123", "0", "-5"), false en caso contrario.
+     */
+    private boolean esSoloNumero(String str) {
+        return Pattern.matches("^[+-]?\\d+$", str);
     }
 }
