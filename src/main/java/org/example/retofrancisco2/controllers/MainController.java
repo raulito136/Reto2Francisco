@@ -5,7 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import org.example.retofrancisco2.copias.Copia;
 import org.example.retofrancisco2.copias.CopiaRepository;
 import org.example.retofrancisco2.services.CopiaService;
@@ -25,6 +27,9 @@ import static javafx.collections.FXCollections.observableArrayList;
  * como añadir, editar, ver y eliminar copias, así como gestionar el cierre de sesión.
  */
 public class MainController implements Initializable {
+
+    @FXML
+    private Pane root;
 
     /** Opción del menú para cerrar sesión. */
     @FXML
@@ -109,28 +114,83 @@ public class MainController implements Initializable {
                 observableArrayList(copiaRepository.findByUsuarioId(
                         Long.valueOf(SessionService.getActiveUser().getId())
                 ));
-
         tablaCopias.setItems(copias);
 
         tablaCopias.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            tfTitulo.setText(newValue.getPelicula().getTitulo());
-            cbEstado.setValue(newValue.getEstado());
-            cbTipo.setValue(newValue.getSoporte());
-            btnEditar.setDisable(false);
-            cbEstado.setDisable(false);
-            cbTipo.setDisable(false);
-            btnVerCopia.setDisable(false);
+            if (newValue != null) {
+                tfTitulo.setText(newValue.getPelicula().getTitulo());
+                cbEstado.setValue(newValue.getEstado());
+                cbTipo.setValue(newValue.getSoporte());
+
+                btnEditar.setDisable(false);
+                cbEstado.setDisable(false);
+                cbTipo.setDisable(false);
+                btnVerCopia.setDisable(false);
+                if (btnEliminar != null) btnEliminar.setDisable(false);
+            } else {
+                limpiarFormulario();
+            }
         });
 
-        if (tfTitulo.getText().isEmpty()) {
-            btnEditar.setDisable(true);
-            cbEstado.setDisable(true);
-            cbTipo.setDisable(true);
-            btnVerCopia.setDisable(true);
+        tablaCopias.setOnMouseClicked(event -> {
+            Node source = (Node) event.getTarget();
+            boolean clickEnFilaValida = false;
+            Node node = source;
+            while (node != null && node != tablaCopias) {
+                if (node instanceof TableRow && !((TableRow<?>) node).isEmpty()) {
+                    clickEnFilaValida = true;
+                    break;
+                }
+                node = node.getParent();
+            }
+            if (!clickEnFilaValida) {
+                tablaCopias.getSelectionModel().clearSelection();
+            }
+        });
+
+        if (root != null) {
+            root.setOnMouseClicked(event -> {
+                Node source = (Node) event.getTarget();
+                boolean clicEnZonaSegura = false;
+                Node nodoActual = source;
+                while (nodoActual != null) {
+                    if (nodoActual == tablaCopias ||
+                            nodoActual instanceof Button ||
+                            nodoActual instanceof TextField ||
+                            nodoActual instanceof ComboBox ||
+                            nodoActual instanceof MenuBar) {
+
+                        clicEnZonaSegura = true;
+                        break;
+                    }
+                    nodoActual = nodoActual.getParent();
+                }
+
+                if (!clicEnZonaSegura) {
+                    tablaCopias.getSelectionModel().clearSelection();
+                }
+            });
         }
+
+        limpiarFormulario();
 
         cbEstado.getItems().addAll("bueno", "Nuevo", "Dañado");
         cbTipo.getItems().addAll("DVD", "Blu-ray", "VHS");
+    }
+
+    /**
+     * Limpia los campos del formulario y deshabilita los botones de acción.
+     */
+    private void limpiarFormulario() {
+        tfTitulo.setText("");
+        cbEstado.setValue(null);
+        cbTipo.setValue(null);
+
+        btnEditar.setDisable(true);
+        cbEstado.setDisable(true);
+        cbTipo.setDisable(true);
+        btnVerCopia.setDisable(true);
+        if (btnEliminar != null) btnEliminar.setDisable(true);
     }
 
     /**
@@ -205,6 +265,8 @@ public class MainController implements Initializable {
     public void editarCopia(ActionEvent actionEvent) {
         Copia seleccionada = tablaCopias.getSelectionModel().getSelectedItem();
 
+        if (seleccionada == null) return; // Seguridad extra
+
         if (tfTitulo.getText().isEmpty() || cbEstado.getValue() == null || cbTipo.getValue() == null) {
             JavaFXUtil.showModal(Alert.AlertType.WARNING, "Atención", null, "Debe rellenar todos los campos");
         } else {
@@ -224,7 +286,9 @@ public class MainController implements Initializable {
     @FXML
     public void verCopia(ActionEvent actionEvent) {
         Copia seleccionada = tablaCopias.getSelectionModel().getSelectedItem();
-        CopiaService.getInstance().setCopiaSeleccionada(seleccionada);
-        JavaFXUtil.setScene("/org/example/retofrancisco2/ver_copia-view.fxml");
+        if (seleccionada != null) {
+            CopiaService.getInstance().setCopiaSeleccionada(seleccionada);
+            JavaFXUtil.setScene("/org/example/retofrancisco2/ver_copia-view.fxml");
+        }
     }
 }
