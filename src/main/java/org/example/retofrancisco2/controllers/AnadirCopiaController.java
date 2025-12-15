@@ -143,6 +143,8 @@ public class AnadirCopiaController implements Initializable {
 
         copiaRepository.save(copia);
 
+        JavaFXUtil.showModal(Alert.AlertType.INFORMATION, "Éxito", null, "Copia añadida correctamente");
+
         JavaFXUtil.setScene("/org/example/retofrancisco2/main-view.fxml");
     }
 

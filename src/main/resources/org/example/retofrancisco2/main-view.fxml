@@ -96,6 +96,11 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </Button>
+            <Button fx:id="btnDeshacer" mnemonicParsing="false" onAction="#deshacer" prefHeight="25.0" prefWidth="217.0" text="Deshacer Eliminacion">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
          </children>
       </VBox>
    </right>

@@ -165,6 +165,8 @@ public class AnadirPeliculasController implements Initializable {
         peliculaRepository.save(pelicula);
         tabla.getItems().add(pelicula);
 
+        JavaFXUtil.showModal(Alert.AlertType.INFORMATION, "Éxito", null, "Película añadida correctamente");
+
         // Limpieza de campos
         tfTitulo.clear();
         tfGenero.clear();

@@ -39,7 +39,7 @@ public class CopiaRepository implements Repository<Copia> {
     public Copia save(Copia entity) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.persist(entity);
+            session.merge(entity);
             session.getTransaction().commit();
             return entity;
         }

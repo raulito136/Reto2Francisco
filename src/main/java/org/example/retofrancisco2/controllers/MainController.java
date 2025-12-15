@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import org.example.retofrancisco2.copias.Copia;
 import org.example.retofrancisco2.copias.CopiaRepository;
@@ -16,6 +17,8 @@ import org.example.retofrancisco2.utils.DataProvider;
 import org.example.retofrancisco2.utils.JavaFXUtil;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -28,77 +31,111 @@ import static javafx.collections.FXCollections.observableArrayList;
  */
 public class MainController implements Initializable {
 
-    @FXML
-    private Pane root;
-
-    /** Opción del menú para cerrar sesión. */
+    /**
+     * Opción del menú para cerrar sesión.
+     */
     @FXML
     private MenuItem cerrarSesion;
 
-    /** Botón para eliminar una copia seleccionada. */
+    /**
+     * Botón para eliminar una copia seleccionada.
+     */
     @FXML
     private Button btnEliminar;
 
-    /** Opción del menú para cerrar la aplicación. */
+    /**
+     * Opción del menú para cerrar la aplicación.
+     */
     @FXML
     private MenuItem cerrar;
 
-    /** Tabla donde se muestran las copias del usuario activo. */
+    /**
+     * Tabla donde se muestran las copias del usuario activo.
+     */
     @FXML
     private TableView<Copia> tablaCopias;
 
-    /** Barra de menú de la interfaz. */
+    /**
+     * Barra de menú de la interfaz.
+     */
     @FXML
     private MenuBar menu;
 
-    /** Botón para añadir una nueva copia. */
+    /**
+     * Botón para añadir una nueva copia.
+     */
     @FXML
     private Button btnAñadir;
 
-    /** Repositorio para operaciones de persistencia con copias. */
+    /**
+     * Repositorio para operaciones de persistencia con copias.
+     */
     private CopiaRepository copiaRepository;
 
-    /** ComboBox para seleccionar el estado de la copia seleccionada. */
+    /**
+     * ComboBox para seleccionar el estado de la copia seleccionada.
+     */
     @FXML
     private ComboBox cbEstado;
 
-    /** Columna que muestra el título de la película asociada a la copia. */
+    /**
+     * Columna que muestra el título de la película asociada a la copia.
+     */
     @FXML
     private TableColumn<Copia, String> tcTitulo;
 
-    /** Columna que muestra el tipo de soporte de la copia. */
+    /**
+     * Columna que muestra el tipo de soporte de la copia.
+     */
     @FXML
     private TableColumn<Copia, String> tcTipo;
 
-    /** Botón para editar los datos de la copia seleccionada. */
+    /**
+     * Botón para editar los datos de la copia seleccionada.
+     */
     @FXML
     private Button btnEditar;
 
-    /** Columna que muestra el estado de la copia. */
+    /**
+     * Columna que muestra el estado de la copia.
+     */
     @FXML
     private TableColumn<Copia, String> tcEstado;
 
-    /** ComboBox para seleccionar el soporte de la copia seleccionada. */
+    /**
+     * ComboBox para seleccionar el soporte de la copia seleccionada.
+     */
     @FXML
     private ComboBox cbTipo;
 
-    /** Campo de texto que muestra el título de la copia seleccionada. */
+    /**
+     * Campo de texto que muestra el título de la copia seleccionada.
+     */
     @FXML
     private TextField tfTitulo;
 
-    /** Botón para ver los detalles de la copia seleccionada. */
+    /**
+     * Botón para ver los detalles de la copia seleccionada.
+     */
     @FXML
     private Button btnVerCopia;
+    @FXML
+    private Button btnDeshacer;
+    @FXML
+    private BorderPane root;
+
+    private List<Copia> copiasEliminadas = new ArrayList<>();
 
     /**
      * Inicializa la vista cargando las copias del usuario, configurando las columnas
      * de la tabla y activando/desactivando controles según corresponda.
      *
-     * @param url ruta del FXML cargado.
+     * @param url            ruta del FXML cargado.
      * @param resourceBundle recursos de idioma o configuración.
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        btnDeshacer.setDisable(true);
         copiaRepository = new CopiaRepository(DataProvider.getSessionFactory());
 
         tcTitulo.setCellValueFactory(row ->
@@ -225,8 +262,10 @@ public class MainController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
 
             if (result.isPresent() && result.get() == ButtonType.OK) {
+                copiasEliminadas.add(seleccionada);
                 copiaRepository.delete(seleccionada);
                 tablaCopias.getItems().remove(seleccionada);
+                btnDeshacer.setDisable(false);
             }
 
         } else {
@@ -274,6 +313,7 @@ public class MainController implements Initializable {
             seleccionada.setSoporte(cbTipo.getValue().toString());
             copiaRepository.edit(seleccionada);
             tablaCopias.refresh();
+            JavaFXUtil.showModal(Alert.AlertType.INFORMATION, "Éxito", null, "Copia editada correctamente");
         }
     }
 
@@ -289,6 +329,26 @@ public class MainController implements Initializable {
         if (seleccionada != null) {
             CopiaService.getInstance().setCopiaSeleccionada(seleccionada);
             JavaFXUtil.setScene("/org/example/retofrancisco2/ver_copia-view.fxml");
+        }
+    }
+
+    @FXML
+    public void deshacer(ActionEvent actionEvent) {
+        if (!copiasEliminadas.isEmpty()) {
+            Copia copiaARecuperar = copiasEliminadas.getLast();
+
+            copiaARecuperar.setId(null);
+
+            copiaRepository.save(copiaARecuperar);
+            tablaCopias.getItems().add(copiaARecuperar);
+            copiasEliminadas.remove(copiaARecuperar);
+            tablaCopias.refresh();
+
+            JavaFXUtil.showModal(Alert.AlertType.INFORMATION, "Deshacer", null, "Copia restaurada.");
+        }
+
+        if (copiasEliminadas.isEmpty()) {
+            btnDeshacer.setDisable(true);
         }
     }
 }
